@@ -22,9 +22,6 @@ const Layout = styled(LayoutComponent)`
     display: flex;
     flex-direction: column;
     height: 100%;
-    .layout-item__nav {
-      height: 50px;
-    }
     .layout-item__main {
       flex: 1;
     }

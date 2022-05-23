@@ -6,6 +6,9 @@ const MainComponent = ({ className }: any) => {
   type NumberInputType = 'hours' | 'minutes' | 'seconds';
   type TabType = 'countDown' | 'stopwatch  ';
   type ModeType = 'set' | 'start' | 'stop' | 'reset' | 'pause';
+  const src = require("../../assets/music/alarm1.mp3");
+  const audio = new Audio(src);
+  audio.loop = true;
   const [ activeTab, setActiveTab ] = useState<TabType>('countDown');
   const [ currentMode, setCurrentMode ] = useState<ModeType>('set');
   const [ hours, setHours ] = useState<string>('00');
@@ -66,32 +69,39 @@ const MainComponent = ({ className }: any) => {
   const handleStop = () => {
     setCurrentMode('stop');
     clearInterval(intervalRef.current as NodeJS.Timeout);
+    audio.pause();
   };
-  const handleReset = () => {
+  const handleReset = async() => {
     setCurrentMode('reset');
-    setTotalMilliseconds(0);
+    await setTotalMilliseconds(0);
+    transformToTime(0);
+    audio.pause();
   };
 
   useEffect(() => {
     if (currentMode === 'start') {
-      intervalRef.current = setInterval(() => {
-        setTotalMilliseconds((prevSeconds: number) =>  {
-          if (prevSeconds > 0 ) {
-            transformToTime(prevSeconds - 1000);
-          }
-          return prevSeconds - 1000
-        });
-      }, 1000);
-    } else if (currentMode === 'reset') {
-      transformToTime(totalMilliseconds);
+      if (totalMilliseconds > 0) {
+        intervalRef.current = setInterval(() => {
+          setTotalMilliseconds((prevSeconds: number) =>  {
+            if (prevSeconds > 0 ) {
+              transformToTime(prevSeconds - 1000);
+            }
+            return prevSeconds - 1000
+          });
+        }, 1000);
+      }
+      if (totalMilliseconds === 0) {
+        audio.play();
+      }
     } else {
       clearInterval(intervalRef.current as NodeJS.Timeout);
     }
   }, [currentMode]);
 
   useEffect(() => {
-    if (totalMilliseconds === 0) {
+    if (currentMode === 'start' && totalMilliseconds === 0) {
       clearInterval(intervalRef.current as NodeJS.Timeout);
+      audio.play();
     }
   }, [totalMilliseconds]);
   
@@ -99,6 +109,7 @@ const MainComponent = ({ className }: any) => {
     <div className={className}>
       <ButtonTab activeTab={ activeTab } handleTabClick={ handleTabClick }/>
       <div className="main-box">
+        {/* 主要內容 */}
         <div className="main-box__container">
           <h2>倒數</h2>
           <div className="time-setting">
@@ -154,7 +165,8 @@ const Main = styled(MainComponent)`
   justify-content: center;
   align-items: center;
   .main-box {
-    width: 700px;
+    width: auto;
+    padding: 0px 20px;
     background: #F0D8B8;
     border-radius: 10px;
     &__container {

@@ -4,18 +4,21 @@ import styled from 'styled-components';
 const NavbarComponent = ({ className }: any) => {
   return (
     <div className={ className }>
-      <div className="nav__logo">Logo</div>
+      <div className="nav__logo">Timer</div>
     </div>
   )
 };
 
 const Navbar = styled(NavbarComponent)`
   max-width: 100%;
-  padding: 20px 20px;
+  padding: 10px 10px;
   text-align: left;
   background: #634F40;
   color: #E6B794;
-  // box-shadow: 2px 3px 7px rgba(0, 0, 0, 0.5);
+  .nav__logo {
+    font-size: 32px;
+    font-weight: bold;
+  }
 `;
 
 export default Navbar;
