@@ -1,38 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
-import { VolumeUp } from 'react-bootstrap-icons';
 
-const MainCountdownComponent = (props: any) => {
-  const {
-    className,
-    currentMode,
-    hours,
-    minutes,
-    seconds,
-    totalMilliseconds,
-    handleInput,
-    handleStart,
-    handleStop,
-    handleReset
-  } = props;
+const MainStopWatchComponent = (props: any) => {
+  const { className,
+          currentMode,
+          hours,
+          minutes,
+          seconds,
+          headMilliseconds,
+          tailMilliseconds,
+          handleStart,
+          handleStop,
+          handleReset
+        } = props;
   return (
     <div className={className}>
       <div className="main-box__container">
-        <h2>倒數</h2>
-        <VolumeUp style={{ color: "#563014", cursor: "pointer", position: "absolute", top: "36px", left: "calc(50% + 50px)", fontSize: 24, marginRight: "15px"}}/>
+        <h2>碼表</h2>
         <div className="time-setting">
           {
-            (currentMode === 'set' || currentMode === 'reset' || (currentMode === 'stop' && totalMilliseconds === 0)) && (
-              <div>
-                <input type="number" max="60" min="0" value={ hours } onChange={ (e: any) =>{ handleInput('hours', e.target.value) } }/>：
-                <input type="number" max="60" min="0" value={ minutes } onChange={ (e: any) =>{ handleInput('minutes', e.target.value) } }/>：
-                <input type="number" max="60" min="0" value={ seconds } onChange={ (e: any) =>{ handleInput('seconds', e.target.value) } }/>
-              </div>
-            )                   
-          }
-          {
-            (currentMode === 'start' || (currentMode === 'stop' && totalMilliseconds !== 0)) && (
-              <div className={`time ${(currentMode === 'start' && totalMilliseconds) === 0 && 'times-up'}`}>{ hours } : { minutes } : { seconds }</div>
+            (
+              <div className="time">{ hours } : { minutes } : { seconds }.{ headMilliseconds }<span>{ tailMilliseconds }</span></div>
             )
           }
         </div>
@@ -56,7 +44,7 @@ const MainCountdownComponent = (props: any) => {
   )
 }
 
-const MainCountdown = styled(MainCountdownComponent)`
+const MainStopWatch = styled(MainStopWatchComponent)`
   .main-box__container {
     padding: 30px;
     position: relative;
@@ -81,9 +69,8 @@ const MainCountdown = styled(MainCountdownComponent)`
       }
       .time {
         font-size: 95px;
-        &.times-up {
-          font-weight: bold;
-          animation: flash 1s infinite;
+        span {
+          font-size: 30px;
         }
       }
     }
@@ -123,4 +110,4 @@ const MainCountdown = styled(MainCountdownComponent)`
   }
 `;
 
-export default MainCountdown;
+export default MainStopWatch;
